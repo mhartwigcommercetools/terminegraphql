@@ -1,0 +1,21 @@
+type Query {
+    taskById(id: ID): Task
+    studentById(id: ID): Student
+    tasksByStudentId(id: ID): [Task]
+}
+
+type Task {
+    id: ID
+    name: String
+    description: String
+    priority: Int
+    student: Student
+
+}
+
+type Student {
+    id: ID
+    firstName: String
+    lastName: String
+    tasks: [Task]
+}
