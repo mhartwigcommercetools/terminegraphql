@@ -8,6 +8,7 @@ import com.mosbach.demo.model.task.Task;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -39,8 +40,12 @@ public class PropertyFileStudentManagerImpl implements StudentManager {
         Student student = null;
 
         try {
-                properties.load(new FileInputStream(fileName));
-                while (properties.containsKey("Student." + i + ".firstname")) {
+            ClassLoader loader = Thread.currentThread().getContextClassLoader();
+            try(InputStream resourceStream = loader.getResourceAsStream(fileName)) {
+                properties.load(resourceStream);
+            }
+
+            while (properties.containsKey("Student." + i + ".firstname")) {
 
                     if (properties.getProperty("Student." + i + ".ID").equals(studentID)) {
                        student = new Student(
@@ -64,7 +69,11 @@ public class PropertyFileStudentManagerImpl implements StudentManager {
         int i = 1;
         List<Student> students = new ArrayList<>();
         try {
-            properties.load(new FileInputStream(fileName));
+            ClassLoader loader = Thread.currentThread().getContextClassLoader();
+            try(InputStream resourceStream = loader.getResourceAsStream(fileName)) {
+                properties.load(resourceStream);
+            }
+
             while (properties.containsKey("Student." + i + ".firstname")) {
                 students.add(
                         new Student(

@@ -52,9 +52,8 @@ public class GraphQLProvider {
                         .dataFetcher("tasksByStudentId", graphQLDataFetchers.getTasksByStudentIdDataFetcher()))
                 .type(newTypeWiring("Task")
                         .dataFetcher("student", graphQLDataFetchers.getStudentDataFetcher()))
-                // TODO Registriere eine Auflösung des Feldes tasks am Student
-                //
-
+                .type(newTypeWiring("Student")
+                        .dataFetcher("tasks", graphQLDataFetchers.getTasksDataFetcher()))
                 .build();
     }
 

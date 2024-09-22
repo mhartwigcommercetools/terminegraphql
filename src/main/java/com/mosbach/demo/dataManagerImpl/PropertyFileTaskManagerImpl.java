@@ -7,6 +7,7 @@ import com.mosbach.demo.model.task.Task;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -37,8 +38,12 @@ public class PropertyFileTaskManagerImpl implements TaskManager {
         Properties properties = new Properties();
         int i = 1;
         try {
-                properties.load(new FileInputStream(fileName));
-                while (properties.containsKey("Task." + i + ".name")) {
+            ClassLoader loader = Thread.currentThread().getContextClassLoader();
+            try(InputStream resourceStream = loader.getResourceAsStream(fileName)) {
+                properties.load(resourceStream);
+            }
+
+            while (properties.containsKey("Task." + i + ".name")) {
                     String studentIdOfTask = properties.getProperty("Task." + i + ".studentid");
                     if (studentIdOfTask == student.getId())
                             tasks.add(

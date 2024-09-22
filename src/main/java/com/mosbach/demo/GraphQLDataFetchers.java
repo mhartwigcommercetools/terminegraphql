@@ -16,8 +16,8 @@ import java.util.stream.Collectors;
 @Component
 public class GraphQLDataFetchers {
 
-    TaskManager taskManager = PropertyFileTaskManagerImpl.getPropertyFileTaskManagerImpl("src/main/resources/Tasks.properties");
-    StudentManager studentManager = PropertyFileStudentManagerImpl.getPropertyFileStudentManagerImpl("src/main/resources/Students.properties");
+    TaskManager taskManager = PropertyFileTaskManagerImpl.getPropertyFileTaskManagerImpl("Tasks.properties");
+    StudentManager studentManager = PropertyFileStudentManagerImpl.getPropertyFileStudentManagerImpl("Students.properties");
 
 
     private Collection<Task> tasks() {
@@ -70,11 +70,14 @@ public class GraphQLDataFetchers {
         };
     }
 
-    // TODO: Korrigiere, jetzt werden alle Tasks geschickt
-    //
     public DataFetcher getTasksDataFetcher() {
         return dataFetchingEnvironment -> {
-                return tasks();
-            };
+            Student student = dataFetchingEnvironment.getSource();
+            String studentId = student.getId();
+            return tasks()
+                    .stream()
+                    .filter(task -> task.getStudentId().equals(studentId))
+                    .collect(Collectors.toList());
+        };
     }
 }
